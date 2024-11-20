@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6mdlg0mk2f7i"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_boi8g"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_boi8g")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1154.0
+offset_bottom = 648.0
+
+[node name="ColorTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="InstructionLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 330.0
+offset_top = 205.0
+offset_right = 846.0
+offset_bottom = 404.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="timeout" from="ColorTimer" to="." method="_on_color_timer_timeout"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6mdlg0mk2f7i"]
+[gd_scene load_steps=3 format=3 uid="uid://b6mdlg0mk2f7i"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_boi8g"]
+[ext_resource type="AudioStream" uid="uid://baswrebl6l2oa" path="res://sounds/sniff-[AudioTrimmer.com].mp3" id="2_c63it"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_boi8g")
@@ -10,6 +11,7 @@ offset_right = 1154.0
 offset_bottom = 648.0
 
 [node name="ColorTimer" type="Timer" parent="."]
+wait_time = 10.0
 autostart = true
 
 [node name="InstructionLabel" type="Label" parent="."]
@@ -27,5 +29,9 @@ grow_vertical = 2
 text = "Press "
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="sniffsound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_c63it")
+volume_db = 9.0
 
 [connection signal="timeout" from="ColorTimer" to="." method="_on_color_timer_timeout"]

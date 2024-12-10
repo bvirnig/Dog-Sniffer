@@ -1,98 +1,135 @@
-extends Node2D
+extends Node2D  # Keeping the main scene as Node2D
 
-# Reference to the ColorRect, Timer, and Label nodes
+# Reference to various nodes
 @onready var color_rect = $ColorRect
-@onready var color_timer = $ColorTimer  # Use the existing ColorTimer in the scene
-@onready var instruction_label = $InstructionLabel  # Reference to the Label node
-@onready var sound_player = $sniffsound  # Reference to the AudioStreamPlayer node
+@onready var color_timer = $ColorTimer
+@onready var instruction_label = $InstructionLabel
+@onready var sound_player = $sniffsound
+@onready var score_label = $ScoreLabel
+@onready var game_timer = $GameTimer  # Reference to the GameTimer node
+@onready var game_timer_label = $GameTimerLabel  # Reference to the GameTimerLabel node
 
-# Predefined list of allowed colors (updated to include a sixth color)
+# Preload GameOver scene and reference it
+@onready var game_over_scene = preload("res://game_over.tscn")
+var game_over_instance: Node = null  # Holds the instance of the GameOver scene
+
+# Predefined list of allowed colors
 var allowed_colors = [
-	Color(0.5, 0.0, 1.0),  # Purple (index 0)
-	Color(1.0, 0.0, 1.0),  # Pink (index 1)
-	Color(1.0, 1.0, 0.0),  # Yellow (index 2)
-	Color(0.0, 1.0, 0.0),  # Green (index 3)
-	Color(0.0, 0.0, 1.0),  # Blue (index 4)
+	Color(0.5, 0.0, 1.0),  # Purple
+	Color(1.0, 0.0, 1.0),  # Pink
+	Color(1.0, 1.0, 0.0),  # Yellow
+	Color(0.0, 1.0, 0.0),  # Green
+	Color(0.0, 0.0, 1.0),  # Blue
 ]
 
-# A list of corresponding key actions that match the new color order
-var color_keys = [
-	"1",  # Purple (1 key)
-	"2",  # Pink (2 key)
-	"3",  # Yellow (3 key)
-	"4",  # Green (4 key)
-	"5",  # Blue (5 key)
-]
+# Corresponding key actions
+var color_keys = ["1", "2", "3", "4", "5"]
 
-# Sound effect paths for keys 1 to 5
+# Sound effect paths
 var sound_effects = [
-	"res://sounds/sniff-[AudioTrimmer.com].mp3",  # Purple key sound
-	"res://sounds/sniff-[AudioTrimmer.com].mp3",  # Pink key sound
-	"res://sounds/sniff-[AudioTrimmer.com].mp3",  # Yellow key sound
-	"res://sounds/sniff-[AudioTrimmer.com].mp3",  # Green key sound
-	"res://sounds/sniff-[AudioTrimmer.com].mp3"   # Blue key sound
+	"res://sounds/sniff-purple.mp3",
+	"res://sounds/sniff-pink.mp3",
+	"res://sounds/sniff-yellow.mp3",
+	"res://sounds/sniff-green.mp3",
+	"res://sounds/sniff-blue.mp3"
 ]
 
-# Variable to track the current color index
-var selected_color_index: int = 0
+var selected_color_index: int = 0  # Tracks the current color index
 
 # Called when the node enters the scene tree for the first time
 func _ready() -> void:
-	# Ensure the timer is active (set its wait time and auto start)
-	color_timer.start()  # Start the timer
-	_set_selected_color()  # Set the initial color
-	_update_instruction_label()  # Update the instruction label with the first instruction
+	color_timer.start()
+	game_timer.start()  # Start the game timer
+	_set_selected_color()
+	_update_instruction_label()
+	_update_score_label()
+	# Connect the timeout signal of the game timer
+	game_timer.timeout.connect(_on_game_timer_timeout)
 
-# Helper function to set the selected color based on the current color index
+	# Check if the GameTimerLabel node is available
+	if game_timer_label == null:
+		print("Error: GameTimerLabel node is not found in the scene.")
+	else:
+		# Update the game timer label every frame
+		set_process(true)
+
+# Helper function to set the selected color
 func _set_selected_color() -> void:
-	# Ensure the selected color index is within bounds of the allowed_colors array
 	if selected_color_index >= 0 and selected_color_index < allowed_colors.size():
 		color_rect.color = allowed_colors[selected_color_index]
-		print("Selected color: " + _get_color_name(allowed_colors[selected_color_index]))  # Debug message
 	else:
-		print("Invalid color index!")  # Error if the index is out of bounds
+		print("Invalid color index!")
 
-# Update the instruction label to show the correct key for the new color
+# Update the instruction label
 func _update_instruction_label() -> void:
 	if selected_color_index >= 0 and selected_color_index < allowed_colors.size():
-		instruction_label.text = "Pres33333333333333333333s " + color_keys[selected_color_index] + " when " + _get_color_name(allowed_colors[selected_color_index]) + " is up!"
+		instruction_label.text = "Press " + color_keys[selected_color_index] + " when " + _get_color_name(allowed_colors[selected_color_index]) + " is up!"
 	else:
 		instruction_label.text = "Invalid color selection!"
 
-# Helper function to get the color name as a string (for the label)
+# Helper function to get the color name
 func _get_color_name(color: Color) -> String:
-	if color == allowed_colors[0]:
-		return "Purple"
-	elif color == allowed_colors[1]:
-		return "Pink"
-	elif color == allowed_colors[2]:
-		return "Yellow"
-	elif color == allowed_colors[3]:
-		return "Green"
-	elif color == allowed_colors[4]:
-		return "Blue"
+	if color == allowed_colors[0]: return "Purple"
+	elif color == allowed_colors[1]: return "Pink"
+	elif color == allowed_colors[2]: return "Yellow"
+	elif color == allowed_colors[3]: return "Green"
+	elif color == allowed_colors[4]: return "Blue"
 	return "Unknown"
 
-# Called every frame. 'delta' is the elapsed time since the previous frame
+# Helper function to update the score label
+func _update_score_label() -> void:
+	score_label.text = str(Gamedata.deposited_points)
+
+# Check key presses every frame
 func _process(delta: float) -> void:
-	# Check if the correct key is pressed based on the current selected color
+	if game_timer_label != null:
+		# Update the GameTimerLabel with the remaining time
+		game_timer_label.text = str(int(game_timer.time_left))  # Cast time_left to an integer for display
+	else:
+		print("GameTimerLabel is null, cannot update the text.")
+
 	if selected_color_index >= 0 and selected_color_index < allowed_colors.size():
 		if Input.is_action_just_pressed(color_keys[selected_color_index]):
-			# Play the corresponding sound
-			sound_player.stream = load(sound_effects[selected_color_index])  # Load the sound for the key pressed
-			sound_player.play()  # Play the sound
-			# Add points to GameData
-			Gamedata.points += 1  # Increase points stored in the GameData singleton
-			print("Points: %d" % Gamedata.points)  # Print the points to the debug console
-
-	# Always check if the "6" key is pressed
+			sound_player.stream = load(sound_effects[selected_color_index])
+			sound_player.play()
+			Gamedata.points += 1
+			print("Points: %d" % Gamedata.points)
+	
 	if Input.is_action_just_pressed("6"):
-		Gamedata.deposit_points()  # Call the deposit function to transfer points
-		print("Deposited Points: %d" % Gamedata.deposited_points)  # Print the deposited points
+		Gamedata.deposit_points()
+		print("Deposited Points: %d" % Gamedata.deposited_points)
+		_update_score_label()
 
-# Called when the timer reaches its timeout (this function is called periodically)
+# Timer timeout for color change
 func _on_color_timer_timeout() -> void:
-	# Randomly choose a new color index
-	selected_color_index = randi() % allowed_colors.size()  # Generates a random index
-	_set_selected_color()  # Update the color on the ColorRect
-	_update_instruction_label()  # Update the instruction label with the correct key for the new color
+	selected_color_index = randi() % allowed_colors.size()
+	_set_selected_color()
+	_update_instruction_label()
+
+# Game timer timeout (signals the end of the game)
+func _on_game_timer_timeout() -> void:
+	color_timer.stop()  # Stop the color timer
+	game_timer.stop()  # Stop the game timer
+	instruction_label.text = "Game Over! Final Score: " + str(Gamedata.deposited_points)
+	print("Game Over! Final Score: %d" % Gamedata.deposited_points)
+	
+	# Instance the GameOver scene and add it to the main scene
+	if game_over_instance == null:
+		game_over_instance = game_over_scene.instantiate()  # Create the GameOver scene instance
+		add_child(game_over_instance)  # Add it to the scene tree
+	
+	# Update the GameOver labels with the final score
+	var game_over_label = game_over_instance.get_node("GameOverLabel")
+	var final_score_label = game_over_instance.get_node("FinalScoreLabel")
+	if game_over_label != null:
+		game_over_label.text = "Game Over!"
+	if final_score_label != null:
+		final_score_label.text = "Final Score: " + str(Gamedata.deposited_points)
+
+# Handle mouse click to return to the splash page
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		# Check if we are in the GameOver screen and the mouse was clicked
+		if game_over_instance:
+			# Change to the splash scene using the correct method in Godot 4
+			get_tree().change_scene_to_file("res://splash.tscn")  # Replace with your splash scene path

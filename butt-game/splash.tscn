@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cy65rj574sqj3"]
+
+[ext_resource type="Script" path="res://splash.gd" id="1_ydjyg"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_qgk7s"]
+
+[node name="splash" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_ydjyg")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0.207843, 0.713726, 0.513726, 1)
+layout_mode = 0
+offset_right = 1151.0
+offset_bottom = 644.0
+texture = SubResource("CanvasTexture_qgk7s")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 155.0
+offset_top = 338.0
+offset_right = 982.0
+offset_bottom = 615.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 100
+text = "Start Game
+Click Mouse"
+horizontal_alignment = 1
+vertical_alignment = 1

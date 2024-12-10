@@ -13,7 +13,6 @@ var allowed_colors = [
 	Color(1.0, 1.0, 0.0),  # Yellow (index 2)
 	Color(0.0, 1.0, 0.0),  # Green (index 3)
 	Color(0.0, 0.0, 1.0),  # Blue (index 4)
-	Color(1.0, 1.0, 1.0)   # White (index 5 - color for button 6)
 ]
 
 # A list of corresponding key actions that match the new color order
@@ -23,7 +22,6 @@ var color_keys = [
 	"3",  # Yellow (3 key)
 	"4",  # Green (4 key)
 	"5",  # Blue (5 key)
-	"6"   # White (6 key)
 ]
 
 # Sound effect paths for keys 1 to 5
@@ -57,7 +55,7 @@ func _set_selected_color() -> void:
 # Update the instruction label to show the correct key for the new color
 func _update_instruction_label() -> void:
 	if selected_color_index >= 0 and selected_color_index < allowed_colors.size():
-		instruction_label.text = "Press " + color_keys[selected_color_index] + " when " + _get_color_name(allowed_colors[selected_color_index]) + " is up!"
+		instruction_label.text = "Pres33333333333333333333s " + color_keys[selected_color_index] + " when " + _get_color_name(allowed_colors[selected_color_index]) + " is up!"
 	else:
 		instruction_label.text = "Invalid color selection!"
 
@@ -88,7 +86,7 @@ func _process(delta: float) -> void:
 			print("Points: %d" % Gamedata.points)  # Print the points to the debug console
 
 	# Always check if the "6" key is pressed
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("6"):
 		Gamedata.deposit_points()  # Call the deposit function to transfer points
 		print("Deposited Points: %d" % Gamedata.deposited_points)  # Print the deposited points
 

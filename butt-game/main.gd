@@ -36,6 +36,10 @@ var sound_effects = [
 
 var selected_color_index: int = 0  # Tracks the current color index
 
+# Add dogfarting event timer
+@onready var dogfarting_timer = $FartTimer  # Timer for random dogfarting event
+var dogfarting_active: bool = false  # Flag for dogfarting event
+
 # Called when the node enters the scene tree for the first time
 func _ready() -> void:
 	color_timer.start()
@@ -43,15 +47,30 @@ func _ready() -> void:
 	_set_selected_color()
 	_update_instruction_label()
 	_update_score_label()
+	
 	# Connect the timeout signal of the game timer
 	game_timer.timeout.connect(_on_game_timer_timeout)
-
+	
+	# Start dogfarting event timer
+	dogfarting_timer.start(randf_range(5, 10))  # Random dogfarting start time between 5 and 10 seconds
+	dogfarting_timer.timeout.connect(_on_dogfarting_timeout)  # Connect timeout signal for dogfarting event
+	
 	# Check if the GameTimerLabel node is available
 	if game_timer_label == null:
 		print("Error: GameTimerLabel node is not found in the scene.")
 	else:
 		# Update the game timer label every frame
 		set_process(true)
+
+# Timer timeout for dogfarting event
+func _on_dogfarting_timeout() -> void:
+	# Randomly activate or deactivate the dogfarting event
+	dogfarting_active = !dogfarting_active
+	print("Dogfarting event " + ("activated!" if dogfarting_active else "deactivated!"))
+	
+	# Reset timer for the next dogfarting event
+	dogfarting_timer.start(randf_range(5, 10))  # Random next activation between 5 and 10 seconds
+
 
 # Helper function to set the selected color
 func _set_selected_color() -> void:
@@ -90,10 +109,17 @@ func _process(delta: float) -> void:
 
 	if selected_color_index >= 0 and selected_color_index < allowed_colors.size():
 		if Input.is_action_just_pressed(color_keys[selected_color_index]):
-			sound_player.stream = load(sound_effects[selected_color_index])
-			sound_player.play()
-			Gamedata.points += 1
-			print("Points: %d" % Gamedata.points)
+			# Handle points based on whether dogfarting is active
+			if dogfarting_active:
+				# Decrease points when dogfarting is active
+				Gamedata.points -= 1
+				print("Dogfarting! Lost 1 point. Points: %d" % Gamedata.points)
+			else:
+				# Regular behavior, gain points for correct input
+				sound_player.stream = load(sound_effects[selected_color_index])
+				sound_player.play()
+				Gamedata.points += 1
+				print("Points: %d" % Gamedata.points)
 	
 	if Input.is_action_just_pressed("6"):
 		Gamedata.deposit_points()
@@ -132,4 +158,4 @@ func _input(event: InputEvent) -> void:
 		# Check if we are in the GameOver screen and the mouse was clicked
 		if game_over_instance:
 			# Change to the splash scene using the correct method in Godot 4
-			get_tree().change_scene_to_file("res://splash.tscn")  # Replace with your splash scene path
+			get_tree().change_scene_to_file("res://splash.tscn")  # Replace

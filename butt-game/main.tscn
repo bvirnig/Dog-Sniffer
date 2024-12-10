@@ -70,5 +70,7 @@ offset_bottom = 129.0
 [node name="GameOver" parent="." instance=ExtResource("3_axuwh")]
 visible = false
 
+[node name="FartTimer" type="Timer" parent="."]
+
 [connection signal="timeout" from="ColorTimer" to="." method="_on_color_timer_timeout"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]

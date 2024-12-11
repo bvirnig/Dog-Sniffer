@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://5uaw70f2daju"]
+[gd_scene load_steps=3 format=3 uid="uid://5uaw70f2daju"]
+
+[ext_resource type="AudioStream" uid="uid://dfkaq4wny8ymc" path="res://sounds/buzzer-or-wrong-answer-20582.mp3" id="1_weg30"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_ewyi3"]
 
@@ -42,3 +44,7 @@ theme_override_font_sizes/font_size = 60
 text = "GAMEOVER"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="gamebuzzer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("1_weg30")
+volume_db = 20.0

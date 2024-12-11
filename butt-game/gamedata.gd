@@ -6,6 +6,7 @@ var deposited_points: int = 0
 
 # Reference to the AudioStreamPlayer for no points sound
 @onready var no_points_sound = $nopoints
+@onready var point_deposit_sound = $pointdeposit
 
 # This function can be used to reset the points and deposited points
 func reset_points():
@@ -18,6 +19,8 @@ func deposit_points():
 		points -= 1  # Deduct 1 point from the regular points
 		deposited_points += 1  # Add 1 point to the deposited points
 		print("Deposited 1 point. Regular Points: %d, Deposited Points: %d" % [points, deposited_points])
+		if point_deposit_sound:  # Ensure the AudioStreamPlayer is valid
+			point_deposit_sound.play()  # Play the point deposit sound
 	else:
 		print("No points to deposit!")  # If there are no points to deposit
 		if no_points_sound:  # Ensure the AudioStreamPlayer is valid

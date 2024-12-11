@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c5yqw7k2sads1"
+path="res://.godot/imported/go say hi.mp3-1d907cf8a6069a0cc001d47e19790aa6.mp3str"
+
+[deps]
+
+source_file="res://sounds/go say hi.mp3"
+dest_files=["res://.godot/imported/go say hi.mp3-1d907cf8a6069a0cc001d47e19790aa6.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

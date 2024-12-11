@@ -1,10 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://0et1ld1osvh3"]
+[gd_scene load_steps=4 format=3 uid="uid://0et1ld1osvh3"]
 
 [ext_resource type="Script" path="res://gamedata.gd" id="1_4lck6"]
-[ext_resource type="AudioStream" uid="uid://baswrebl6l2oa" path="res://sounds/sniff-[AudioTrimmer.com].mp3" id="2_wv1re"]
+[ext_resource type="AudioStream" uid="uid://ddcw58pqhbqik" path="res://sounds/wrong-47985.mp3" id="2_2kjau"]
+[ext_resource type="AudioStream" uid="uid://bedrhicev88up" path="res://sounds/point-smooth-beep-230573.mp3" id="3_e7cn6"]
 
 [node name="gamedata" type="Node2D"]
 script = ExtResource("1_4lck6")
 
 [node name="nopoints" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("2_wv1re")
+stream = ExtResource("2_2kjau")
+volume_db = 20.0
+
+[node name="pointdeposit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_e7cn6")
+volume_db = 20.0

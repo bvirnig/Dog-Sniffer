@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6mdlg0mk2f7i"]
+[gd_scene load_steps=6 format=3 uid="uid://b6mdlg0mk2f7i"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_boi8g"]
 [ext_resource type="AudioStream" uid="uid://baswrebl6l2oa" path="res://sounds/sniff-[AudioTrimmer.com].mp3" id="2_c63it"]
 [ext_resource type="PackedScene" uid="uid://5uaw70f2daju" path="res://game_over.tscn" id="3_axuwh"]
+[ext_resource type="AudioStream" uid="uid://y8oqdt0q1kf1" path="res://sounds/fart-noises-83359.mp3" id="4_bmitx"]
+[ext_resource type="AudioStream" uid="uid://c5yqw7k2sads1" path="res://sounds/go say hi.mp3" id="5_agat0"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_boi8g")
@@ -58,7 +60,7 @@ theme_override_font_sizes/font_size = 100
 text = "SCORE:"
 
 [node name="GameTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 2.0
 autostart = true
 
 [node name="GameTimerLabel" type="Label" parent="."]
@@ -71,6 +73,13 @@ offset_bottom = 129.0
 visible = false
 
 [node name="FartTimer" type="Timer" parent="."]
+
+[node name="fartsound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_bmitx")
+volume_db = 20.0
+
+[node name="startsound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_agat0")
 
 [connection signal="timeout" from="ColorTimer" to="." method="_on_color_timer_timeout"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
